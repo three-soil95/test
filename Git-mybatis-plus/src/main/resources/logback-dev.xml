@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <jmxConfigurator />
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %clr(%d{HH:mm:ss.SSS}){blue} %clr(---){faint} %clr([%-5level]){cyan} %clr(%-40.40logger{10}){blue}%clr(:){red}%clr(%L) %clr(:){red} %clr(%m){faint}%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class= "ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 支持多JVM同时操作同一个日志文件 -->
+        <prudent>true</prudent>
+        <!-- 按天来回滚，如果需要按小时来回滚，则设置为{yyyy-MM-dd_HH} -->
+        <!-- Use SizeAndTimeBasedRollingPolicy instead since 2018-05-23 pzp -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>./logs/ruice_data_log.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 30 days worth of history, but at most 10GB -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+
+        <!-- 日志输出格式 -->
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %logger{36}.%M:%L - %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <!-- spring logger -->
+    <logger name="com.ruice.admin.utils">
+        <level value="DEBUG" />
+    </logger>
+    <!-- spring logger -->
+    <logger name="com.ruice.admin.service">
+        <level value="DEBUG" />
+    </logger>
+
+    <!-- spring logger -->
+    <logger name="org.springframework">
+        <level value="WARN" />
+    </logger>
+</configuration>
